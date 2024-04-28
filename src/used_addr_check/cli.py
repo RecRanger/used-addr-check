@@ -1,5 +1,5 @@
-from make_optimized_file import ingest_raw_list_file
-from search_optimized_file import search_file
+from used_addr_check.make_optimized_file import ingest_raw_list_file
+from used_addr_check.search_optimized_file import search_file
 
 from pathlib import Path
 import argparse
@@ -44,7 +44,11 @@ def main_cli():
         help="File to be searched",
     )
     search_parser.add_argument(
-        "-s", "--search", required=True, action="append", help="Search query"
+        "-s",
+        "--search",
+        required=True,
+        action="append",
+        help="Search query(s) to find in the file",
     )
 
     args = parser.parse_args()
