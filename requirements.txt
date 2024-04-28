@@ -1,0 +1,4 @@
+xxhash>=*
+orjson>=*
+tqdm>=*
+loguru>=*
