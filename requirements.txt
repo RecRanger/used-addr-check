@@ -2,3 +2,4 @@ xxhash>=*
 orjson>=*
 tqdm>=*
 loguru>=*
+numpy>=*

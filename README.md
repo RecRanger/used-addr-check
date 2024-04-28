@@ -1,4 +1,4 @@
-# used_addr_check
+# used_addr_check (Python)
 A tool to efficiently check if a Bitcoin Address has ever been used before
 
 ## Description

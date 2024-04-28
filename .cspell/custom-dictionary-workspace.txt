@@ -1,5 +1,7 @@
 # Custom Dictionary Words
+dtype
 intdigest
 loguru
+ndarray
 orjson
 tqdm

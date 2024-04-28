@@ -4,10 +4,12 @@ from typing import Literal
 
 from loguru import logger
 from tqdm import tqdm
-import xxhash
 import orjson
 
-from used_addr_check.optimized_file import OptimizedFilePreambleMetadata
+from used_addr_check.optimized_file import (
+    hash_name_to_size_and_func,
+    OptimizedFilePreambleMetadata,
+)
 
 
 def ingest_raw_list_file(
@@ -24,14 +26,7 @@ def ingest_raw_list_file(
     assert isinstance(gzip_file_path, Path)
     assert isinstance(output_path, Path)
 
-    if hash_algo == "xxhash32":
-        hash_func = xxhash.xxh32
-        hash_size_bytes = 4
-    elif hash_algo == "xxhash64":
-        hash_func = xxhash.xxh64
-        hash_size_bytes = 8
-    else:
-        raise ValueError(f"Invalid hash algorithm: {hash_algo}")
+    hash_size_bytes, hash_func = hash_name_to_size_and_func(hash_algo)
 
     metadata = OptimizedFilePreambleMetadata(
         hash_algo=hash_algo,

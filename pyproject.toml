@@ -8,7 +8,7 @@ version = "0.0.1"
 authors = [
     { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
-description = "A small example package"
+description = "A tool to efficiently check if a Bitcoin Address has ever been used before"
 readme = "README.md"
 requires-python = ">=3.9"
 classifiers = [
@@ -19,6 +19,7 @@ classifiers = [
 dependencies = [
     "loguru~=0.7.2",
     "orjson~=3.10.1",
+    "numpy~=1.26.4",
     "tqdm~=4.66.2",
     "xxhash~=3.4.1",
 ]
