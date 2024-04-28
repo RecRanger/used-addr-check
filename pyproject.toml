@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "used_addr_check"
 version = "0.0.1"
 authors = [
-  { name="RecRanger", email="RecRanger+package@proton.me" },
+    { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
 description = "A small example package"
 readme = "README.md"
@@ -16,9 +16,16 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = [
+    "loguru~=0.7.2",
+    "orjson~=3.10.1",
+    "tqdm~=4.66.2",
+    "xxhash~=3.4.1",
+]
+
 [project.urls]
-Homepage = "https://github.com/RecRanger/used_addr_check"
-Issues = "https://github.com/RecRanger/used_addr_check/issues"
+Homepage = "https://github.com/RecRanger/used-addr-check-py"
+Issues = "https://github.com/RecRanger/used-addr-check-py/issues"
 
 [project.scripts]
 used_addr_check = "used_addr_check.cli:main_cli"

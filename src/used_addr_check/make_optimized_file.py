@@ -108,8 +108,8 @@ def ingest_raw_list_file(
 
                 # Update progress bar
                 if enable_tqdm:
-                    progress_bar.n = gz_file_bin.tell()
                     if metadata.num_hashes % 1000000 == 0:
+                        progress_bar.n = gz_file_bin.tell()
                         progress_bar.refresh()
 
         # gzip file is closed now. Update metadata.
