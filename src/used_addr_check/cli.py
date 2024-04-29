@@ -1,3 +1,4 @@
+from used_addr_check.download_list import download_list, BITCOIN_LIST_URL
 from used_addr_check.make_optimized_file import ingest_raw_list_file
 from used_addr_check.search_optimized_file import search_file
 from used_addr_check.optimized_file import hash_algo_literal_t
@@ -16,6 +17,25 @@ def main_cli():
         description="CLI for file processing and searching"
     )
     subparsers = parser.add_subparsers(dest="command")
+
+    # Subparser for the download command
+    download_parser = subparsers.add_parser(
+        "download", help="Download the file"
+    )
+    download_parser.add_argument(
+        "-o",
+        "--output",
+        dest="output_path",
+        required=True,
+        help="Output file path (should end in .gz)",
+    )
+    download_parser.add_argument(
+        "-u",
+        "--url",
+        dest="url",
+        default=BITCOIN_LIST_URL,
+        help="URL to download the file from",
+    )
 
     # Subparser for the ingest command
     ingest_parser = subparsers.add_parser(
@@ -71,6 +91,8 @@ def main_cli():
         )
     elif args.command == "search":
         search_file(Path(args.file_path), args.search)
+    elif args.command == "download":
+        download_list(Path(args.output_path))
     else:
         parser.print_help()
 
