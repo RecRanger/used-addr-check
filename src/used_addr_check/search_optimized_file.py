@@ -79,9 +79,7 @@ def search_file(
 
         # Compute the hash of the line
         hasher = metadata.hash_func()
-        # NOTE: line contains the newline character at the end
         hasher.update(query.strip())
-        # Retrieve the hash value as an integer
         query_hash_value = hasher.intdigest()
 
         search_result = _do_bisect_search(haystack_np_array, query_hash_value)

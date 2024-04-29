@@ -44,12 +44,12 @@ class OptimizedFilePreambleMetadata:
     hash_algo: str
     hash_size_bytes: int
     endian: Literal["little", "big"] = DEFAULT_OPTIMIZED_FILE_HASH_ENDIAN
+    is_sorted: bool = False
 
     # stats (updated during ingest)
     num_hashes: int = 0
     total_bytes_read: int = 0
     gzip_file_size_bytes: int = 0
-    optimized_file_size_bytes: int = 0
     # TODO: maybe store Search Tree stats here
 
     @property
