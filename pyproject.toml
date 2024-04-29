@@ -20,10 +20,9 @@ dependencies = [
     "backoff~=2.2.1",
     "loguru~=0.7.2",
     "orjson~=3.10.1",
-    "numpy~=1.26.4",
+    "polars~=0.20.23",
     "requests~=2.31.0",
     "tqdm~=4.66.2",
-    "xxhash~=3.4.1",
 ]
 
 [project.optional-dependencies]

@@ -2,7 +2,7 @@ __VERSION__ = "0.0.1"
 __AUTHOR__ = "RecRanger"
 
 from .index_create import (  # noqa F401
-    create_or_load_index,
+    load_or_generate_index,
     generate_index,
     store_index_json,
     load_index_json,

@@ -1,6 +1,6 @@
 from used_addr_check.download_list import download_list, BITCOIN_LIST_URL
 
-from used_addr_check.index_create import create_or_load_index
+from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_search import search_multiple_in_file
 
 import argparse
@@ -67,7 +67,7 @@ def main_cli():
     args = parser.parse_args()
 
     if args.command == "index":
-        create_or_load_index(
+        load_or_generate_index(
             haystack_file_path=Path(args.file_path), force_recreate=True
         )
     elif args.command == "search":

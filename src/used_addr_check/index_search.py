@@ -5,7 +5,7 @@ from typing import List
 from loguru import logger
 
 
-from used_addr_check.index_create import create_or_load_index
+from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_types import IndexEntry
 
 
@@ -108,7 +108,7 @@ def search_multiple_in_file(
     if isinstance(needles, str):
         needles = [needles]
 
-    index = create_or_load_index(haystack_file_path, index_chunk_size)
+    index = load_or_generate_index(haystack_file_path, index_chunk_size)
 
     # do the search
     found_needles = []
