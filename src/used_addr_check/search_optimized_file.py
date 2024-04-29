@@ -26,14 +26,19 @@ def read_hashes_into_np_array(file_path: Path) -> np.ndarray:
             file, dtype=metadata.np_dtype, count=metadata.num_hashes
         )
 
-    logger.info(f"Read the array into memory. Length: {len(np_array):,}")
+    logger.info(
+        f"Read the array into memory. Length: {len(np_array):,} hashes"
+    )
     assert len(np_array) == metadata.num_hashes, (
         f"Expected {metadata.num_hashes} hashes, "
         f"but found {len(np_array)} in the file."
     )
 
-    np_array.sort()
-    logger.info(f"Sorted the array. Shape: {np_array.shape}")
+    if not metadata.is_sorted:
+        logger.warning("Array is not sorted. Sorting it now...")
+        logger.info("Sorting the array...")
+        np_array.sort()
+        logger.info(f"Sorted the array. Shape: {np_array.shape}")
 
     return np_array
 
@@ -78,9 +83,7 @@ def search_file(
         logger.info(f"Searching for query: {query}")
 
         # Compute the hash of the line
-        hasher = metadata.hash_func()
-        hasher.update(query.strip())
-        query_hash_value = hasher.intdigest()
+        query_hash_value = metadata.hash_func(query.encode("ascii"))
 
         search_result = _do_bisect_search(haystack_np_array, query_hash_value)
         if search_result:

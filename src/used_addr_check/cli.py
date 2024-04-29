@@ -1,8 +1,10 @@
 from used_addr_check.make_optimized_file import ingest_raw_list_file
 from used_addr_check.search_optimized_file import search_file
+from used_addr_check.optimized_file import hash_algo_literal_t
 
-from pathlib import Path
 import argparse
+from pathlib import Path
+from typing import get_args
 
 
 def main_cli():
@@ -33,6 +35,14 @@ def main_cli():
         required=True,
         help="Output file path",
     )
+    ingest_parser.add_argument(
+        "-a",
+        "--hash-algo",
+        dest="hash_algo",
+        choices=get_args(hash_algo_literal_t),
+        default="xxhash32",
+        help="Hash algorithm to use. xxhash is faster, but results in more false-positives. md5 is slower, but more accurate.",  # noqa
+    )
 
     # Subparser for the search command
     search_parser = subparsers.add_parser("search", help="Search a file")
@@ -54,7 +64,11 @@ def main_cli():
     args = parser.parse_args()
 
     if args.command == "ingest":
-        ingest_raw_list_file(Path(args.input_path), Path(args.output_path))
+        ingest_raw_list_file(
+            gzip_file_path=Path(args.input_path),
+            output_path=Path(args.output_path),
+            hash_algo=args.hash_algo,
+        )
     elif args.command == "search":
         search_file(Path(args.file_path), args.search)
     else:

@@ -24,6 +24,16 @@ dependencies = [
     "xxhash~=3.4.1",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "black~=24.4.2",
+    "flake8~=7.0.0",
+]
+
+test = [
+    "pytest~=8.2.0",
+]
+
 [project.urls]
 Homepage = "https://github.com/RecRanger/used-addr-check-py"
 Issues = "https://github.com/RecRanger/used-addr-check-py/issues"

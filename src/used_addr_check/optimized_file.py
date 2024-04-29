@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import hashlib
 from typing import Callable, Literal
 from pathlib import Path
 import re
@@ -10,32 +11,36 @@ import xxhash
 DEFAULT_OPTIMIZED_FILE_PREAMBLE_LENGTH_BYTES = 1024 * 16
 DEFAULT_OPTIMIZED_FILE_HASH_ENDIAN = "little"
 
+hash_algo_literal_t = Literal["xxhash32", "xxhash64", "md5_32", "md5_64"]
+
+
+def _hash_xxhash32(data: bytes) -> int:
+    return xxhash.xxh32(data).intdigest()
+
+
+def _hash_xxhash64(data: bytes) -> int:
+    return xxhash.xxh64(data).intdigest()
+
+
+def _hash_md5_32(data: bytes) -> int:
+    return int(hashlib.md5(data).hexdigest(), 16) & 0xFFFFFFFF
+
+
+def _hash_md5_64(data: bytes) -> int:
+    return int(hashlib.md5(data).hexdigest(), 16) & 0xFFFFFFFFFFFFFFFF
+
 
 def hash_name_to_size_and_func(hash_name: str) -> tuple[int, Callable]:
     if hash_name == "xxhash32":
-        return 4, xxhash.xxh32
+        return 4, _hash_xxhash32
     elif hash_name == "xxhash64":
-        return 8, xxhash.xxh64
+        return 8, _hash_xxhash64
+    elif hash_name == "md5_32":
+        return 4, _hash_md5_32
+    elif hash_name == "md5_64":
+        return 8, _hash_md5_64
     else:
         raise ValueError(f"Unsupported hash algorithm: {hash_name}")
-
-
-def hash_info_to_array_type_code(hash_size_bytes: int, endian: str) -> str:
-    """Returns the array type code for the hash size,
-    usable in array.array(...) constructor."""
-    if hash_size_bytes == 4:
-        size_code = "I"
-    elif hash_size_bytes == 8:
-        size_code = "Q"
-    else:
-        raise ValueError(f"Unsupported hash size: {hash_size_bytes}")
-
-    if endian == "little":
-        return f"<{size_code}"
-    elif endian == "big":
-        return f">{size_code}"
-    else:
-        raise ValueError(f"Unsupported endian: {endian}")
 
 
 @dataclass(kw_only=True)

@@ -1,6 +1,5 @@
 from pathlib import Path
 import gzip
-from typing import Literal
 
 from loguru import logger
 import numpy as np
@@ -8,6 +7,7 @@ from tqdm import tqdm
 import orjson
 
 from used_addr_check.optimized_file import (
+    hash_algo_literal_t,
     hash_name_to_size_and_func,
     OptimizedFilePreambleMetadata,
 )
@@ -16,7 +16,7 @@ from used_addr_check.optimized_file import (
 def ingest_raw_list_file(
     gzip_file_path: Path,
     output_path: Path,
-    hash_algo: Literal["xxhash32", "xxhash64"] = "xxhash64",
+    hash_algo: hash_algo_literal_t,
     enable_tqdm: bool = True,
 ) -> None:
     logger.info(
@@ -56,6 +56,7 @@ def ingest_raw_list_file(
     ):
         all_hashes: np.ndarray = np.array([], dtype=metadata.np_dtype)
         pending_hashes: list[int] = []
+
         # Iterate through each line in the gzipped file
         for line in gz_file:
             if len(line) < 5:
@@ -63,14 +64,11 @@ def ingest_raw_list_file(
                 continue
 
             # Compute the hash of the line
-            hasher = hash_func()
-            # NOTE: line contains the newline character at the end
-            hasher.update(line.strip())
-            hash_value = hasher.intdigest()
+            hash_value = hash_func(line.strip())
 
             # Write the hash value to the output file as binary data
             pending_hashes.append(hash_value)
-            if len(pending_hashes) >= 1000000:
+            if len(pending_hashes) >= 50_000_000:
                 all_hashes = np.append(all_hashes, pending_hashes)
                 pending_hashes = []
 
@@ -105,7 +103,12 @@ def ingest_raw_list_file(
     duplicate_count = np.count_nonzero(np.diff(all_hashes) == 0)
     if duplicate_count > 0:
         logger.warning(
-            f"Found {duplicate_count} duplicate hashes in the array."
+            f"Found {duplicate_count:,}/{len(all_hashes):,} duplicate hashes"
+            f" in the array ({duplicate_count/len(all_hashes):.2%})."
+        )
+    else:
+        logger.info(
+            "No duplicate hashes found in the array. Birthday problem avoided."
         )
 
     with open(output_path, "wb") as out_file:
@@ -128,6 +131,15 @@ def ingest_raw_list_file(
         # Write the hash value to the output file as binary data
         for array_slice in _yield_np_array_slices(all_hashes, 1000000):
             out_file.write(array_slice.tobytes())
+
+        # Check the file size
+        expected_file_size = (
+            metadata.preamble_length_bytes
+            + metadata.num_hashes * metadata.hash_size_bytes
+        )
+        assert (
+            out_file.tell() == expected_file_size
+        ), f"Invalid file size: {out_file.tell():,} != {expected_file_size:,}"
 
 
 def _yield_np_array_slices(array: np.ndarray, slice_size: int):
