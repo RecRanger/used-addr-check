@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 from loguru import logger
-
+from tqdm import tqdm
 
 from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_types import IndexEntry
@@ -112,7 +112,7 @@ def search_multiple_in_file(
 
     # do the search
     found_needles = []
-    for needle in needles:
+    for needle in tqdm(needles, desc="Searching needles", unit="needle"):
         if search_in_file_with_index(haystack_file_path, needle, index=index):
             found_needles.append(needle)
     logger.info(
