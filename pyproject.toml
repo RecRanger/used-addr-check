@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "used_addr_check"
-version = "0.0.1"
+version = "0.1.0"
 authors = [
     { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
 description = "A tool to efficiently check if a Bitcoin Address has ever been used before"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -36,8 +36,8 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/RecRanger/used-addr-check-py"
-Issues = "https://github.com/RecRanger/used-addr-check-py/issues"
+Homepage = "https://github.com/RecRanger/used-addr-check"
+Issues = "https://github.com/RecRanger/used-addr-check/issues"
 
 [project.scripts]
 used_addr_check = "used_addr_check.cli:main_cli"

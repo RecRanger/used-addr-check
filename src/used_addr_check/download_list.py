@@ -4,6 +4,11 @@ import backoff
 from loguru import logger
 import requests
 
+# TODO: This download feature isn't really production-ready.
+# TODO: Make the downloader as fast as wget.
+# TODO: Create an extract function.
+
+
 BITCOIN_LIST_URL = "http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz"  # noqa
 
 

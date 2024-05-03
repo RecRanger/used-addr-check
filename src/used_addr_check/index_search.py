@@ -9,7 +9,7 @@ from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_types import IndexEntry
 
 
-def binary_search_index(index: List[IndexEntry], needle: str) -> int:
+def _binary_search_index(index: List[IndexEntry], needle: str) -> int:
     """
     Performs a binary search on the index to find the closest position for the
     needle string.
@@ -62,7 +62,7 @@ def search_in_file_with_index(
     assert isinstance(needle, str)
     assert isinstance(index, list)
 
-    position = binary_search_index(index, needle)
+    position = _binary_search_index(index, needle)
     # logger.debug(f"Search {needle}: Binary search position: {position}")
     # logger.debug(f"Search {needle}: {index[position]}")
     if position == len(index):
@@ -91,7 +91,7 @@ def search_in_file_with_index(
 
 
 def search_multiple_in_file(
-    haystack_file_path: Path,
+    haystack_file_path: Path | str,
     needles: List[str] | str,
     index_chunk_size: int = 1000,
 ) -> List[str]:
@@ -107,6 +107,8 @@ def search_multiple_in_file(
     """
     if isinstance(needles, str):
         needles = [needles]
+    if isinstance(haystack_file_path, str):
+        haystack_file_path = Path(haystack_file_path)
 
     index = load_or_generate_index(haystack_file_path, index_chunk_size)
 
