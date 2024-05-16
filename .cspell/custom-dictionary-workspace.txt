@@ -4,4 +4,6 @@ intdigest
 loguru
 ndarray
 orjson
+ripgrep
+ripgrepy
 tqdm

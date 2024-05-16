@@ -15,17 +15,23 @@ Based on [loyce.club's "all bitcoin addresses ever used" list](http://alladdress
 
 This project depends on the large address list being downloaded and extracted.
 
-1. Download the zipped text file of used addresses, where each line is a used Bitcoin address.
-
 ```bash
+# Download the zipped text file of used addresses, where each line is a used Bitcoin address.
 wget http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz
-```
 
-2. Extract the file:
-
-```bash
+# Extract the file
 gunzip -d ./all_Bitcoin_addresses_ever_used_sorted.txt.gz --stdout | pv > all_Bitcoin_addresses_ever_used_sorted.txt
 ```
+
+Optionally, if you intend to use the `scan_file` subcommand, install `ripgrep`
+from optimal performance:
+
+```bash
+# first, install cargo/rust
+# then, run:
+cargo install ripgrep
+```
+
 
 ## Usage - CLI
 

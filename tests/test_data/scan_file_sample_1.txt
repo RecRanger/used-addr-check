@@ -1,0 +1,12 @@
+This file contains a list of used addresses for testing the "scan_file" command.
+These addresses should be able to be extracted from this file.
+
+These addresses are borrowed from https://github.com/kristapsk/bitcoin-donation-addresses
+
+bc1qdf97u20sav0uxanvgkttmewljvjqh9ljpcmehm
+Some text here
+3E8ociqZa9mZUSwGdSmAEMAoAxBK3FNDcd
+Some text here
+12PCbUDS4ho7vgSccmixKTHmq9qL2mdSns plus another on the same line 1PC9aZC4hNX2rmmrt7uHTfYAS3hRbph4UN
+Some text here
+Some text on the line before 1Archive1n2C579dMsAu3iC6tWzuQJz8dN and after
