@@ -11,7 +11,7 @@ from used_addr_check.index_search import search_multiple_in_file
 # BITCOIN_ADDR_REGEX = r"[13][a-km-zA-HJ-NP-Z1-9]{25,34}"
 
 # Source: https://ihateregex.io/expr/bitcoin-address/
-BITCOIN_ADDR_REGEX = r"((bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39})"
+BITCOIN_ADDR_REGEX = r"\b((bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39})\b"
 
 
 def _extract_addresses_from_file_python_re(text_file_path: Path) -> List[str]:
@@ -105,7 +105,9 @@ def extract_addresses_from_file(
         else:
             raise ValueError(f"Invalid searcher provided: {searcher}")
 
-    raise Exception("This should never be reached.")
+    raise Exception(
+        "This should never be reached. Address extraction has failed."
+    )
 
 
 def scan_file_for_used_addresses(
@@ -126,6 +128,19 @@ def scan_file_for_used_addresses(
     logger.info(
         f"Extracted {len(needle_addresses):,} addresses from the needle file"
     )
+
+    # remove duplicates (get distinct addresses)
+    count_before_distinct = len(needle_addresses)
+    needle_addresses = list(set(needle_addresses))
+    count_after_distinct = len(needle_addresses)
+    addr_count_change = count_after_distinct - count_before_distinct  # neg
+    if addr_count_change != 0:
+        logger.info(
+            "By removing duplicates, address count changed "
+            f"from {count_before_distinct:,} to {count_after_distinct:,}"
+            f" ({addr_count_change:,} addresses)."
+        )
+
     matched_addresses = search_multiple_in_file(
         haystack_file_path, needle_addresses
     )
