@@ -1,15 +1,24 @@
 # from used_addr_check.download_list import download_list, BITCOIN_LIST_URL
+from used_addr_check import __VERSION__
 from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_search import search_multiple_in_file
 from used_addr_check.scan_file import scan_file_for_used_addresses
 
 import argparse
+import sys
 from pathlib import Path
 
 
 def main_cli():
     parser = argparse.ArgumentParser(
         description="CLI for file processing and searching"
+    )
+    parser.add_argument(
+        "-V",
+        "--version",
+        dest="version",
+        action="store_true",
+        help="Print version to stdout and exit",
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -31,6 +40,12 @@ def main_cli():
     #     default=BITCOIN_LIST_URL,
     #     help="URL to download the file from",
     # )
+
+    # Subparser for the 'version' command (subparser not really used)
+    subparsers.add_parser(
+        "version",
+        help="Print version to stdout and exit",
+    )
 
     # Subparser for the 'index' command
     index_parser = subparsers.add_parser(
@@ -86,7 +101,10 @@ def main_cli():
 
     args = parser.parse_args()
 
-    if args.command == "index":
+    if args.command == "version" or args.version:
+        print(f"used_addr_scan version v{__VERSION__}")
+        sys.exit(0)
+    elif args.command == "index":
         load_or_generate_index(
             haystack_file_path=Path(args.haystack_file_path),
             force_recreate=True,
