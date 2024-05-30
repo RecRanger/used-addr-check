@@ -52,7 +52,15 @@ def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> List[str]:
         regex_pattern=BITCOIN_ADDR_REGEX,
         path=str(text_file_path.absolute()),
     )
-    results = rg.only_matching().json().run().as_dict
+    results = (
+        rg.only_matching()
+        .json()
+        .unrestricted()
+        .unrestricted()
+        .unrestricted()
+        .run()
+        .as_dict
+    )
 
     matches = []
     for result in results:
@@ -126,7 +134,8 @@ def scan_file_for_used_addresses(
 
     needle_addresses = extract_addresses_from_file(needle_file_path)
     logger.info(
-        f"Extracted {len(needle_addresses):,} addresses from the needle file"
+        f"Extracted {len(needle_addresses):,} addresses from the needle file "
+        f" ({needle_file_path})"
     )
 
     # remove duplicates (get distinct addresses)

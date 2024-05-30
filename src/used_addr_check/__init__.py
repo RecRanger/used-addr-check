@@ -1,4 +1,4 @@
-__VERSION__ = "0.1.3"
+__VERSION__ = "0.1.4"
 __AUTHOR__ = "RecRanger"
 
 from .index_create import (  # noqa F401

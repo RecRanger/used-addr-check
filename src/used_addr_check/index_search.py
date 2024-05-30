@@ -120,5 +120,5 @@ def search_multiple_in_file(
     logger.info(
         f"Found {len(found_needles):,}/{len(needles):,} needles in the file"
     )
-    logger.info(f"Needles found: {found_needles}")
+    logger.info(f"Needles found: {sorted(found_needles)}")
     return found_needles
