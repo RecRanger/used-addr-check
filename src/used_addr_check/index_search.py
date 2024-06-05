@@ -1,6 +1,7 @@
 import bisect
 from pathlib import Path
 from typing import List
+import json
 
 from loguru import logger
 from tqdm import tqdm
@@ -108,8 +109,9 @@ def search_multiple_in_file(
     """
     if isinstance(needles, str):
         needles = [needles]
-    if isinstance(haystack_file_path, str):
-        haystack_file_path = Path(haystack_file_path)
+
+    haystack_file_path = Path(haystack_file_path)  # normalize to Path
+    assert haystack_file_path.exists(), f"File not found: {haystack_file_path}"
 
     index = load_or_generate_index(haystack_file_path, index_chunk_size)
 
@@ -121,5 +123,5 @@ def search_multiple_in_file(
     logger.info(
         f"Found {len(found_needles):,}/{len(needles):,} needles in the file"
     )
-    logger.info(f"Needles found: {sorted(found_needles)}")
+    logger.info(f"Needles found: {json.dumps(sorted(found_needles))}")
     return found_needles

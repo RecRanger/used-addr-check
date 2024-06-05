@@ -133,6 +133,8 @@ def scan_file_for_used_addresses(
     """
     assert isinstance(haystack_file_path, Path)
     assert isinstance(needle_file_path, Path)
+    assert haystack_file_path.exists(), f"File not found: {haystack_file_path}"
+    assert needle_file_path.exists(), f"File not found: {needle_file_path}"
 
     needle_addresses = extract_addresses_from_file(needle_file_path)
     logger.info(
