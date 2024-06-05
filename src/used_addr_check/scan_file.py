@@ -6,7 +6,7 @@ from loguru import logger
 from ripgrepy import Ripgrepy, RipGrepNotFound
 
 from used_addr_check.index_search import search_multiple_in_file
-
+from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 
 # BITCOIN_ADDR_REGEX = r"[13][a-km-zA-HJ-NP-Z1-9]{25,34}"
 
@@ -119,7 +119,9 @@ def extract_addresses_from_file(
 
 
 def scan_file_for_used_addresses(
-    haystack_file_path: Path, needle_file_path: Path
+    haystack_file_path: Path,
+    needle_file_path: Path,
+    index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
 ):
     """
     Scans a file for bitcoin addresses, and see which one have been used.
@@ -151,6 +153,8 @@ def scan_file_for_used_addresses(
         )
 
     matched_addresses = search_multiple_in_file(
-        haystack_file_path, needle_addresses
+        haystack_file_path,
+        needles=needle_addresses,
+        index_chunk_size=index_chunk_size,
     )
     logger.info(f"Found {len(matched_addresses):,} used addresses in the file")

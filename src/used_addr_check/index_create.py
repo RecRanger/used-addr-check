@@ -7,10 +7,11 @@ import polars as pl
 from tqdm import tqdm
 
 from used_addr_check.index_types import IndexEntry
+from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 
 
 def generate_index(
-    haystack_file_path: Path, index_chunk_size: int = 1000
+    haystack_file_path: Path, index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE
 ) -> List[IndexEntry]:
     """
     Generates an index for a large sorted text file, storing every
@@ -116,7 +117,7 @@ def load_index_parquet(index_parquet_file_path: Path) -> List[IndexEntry]:
 
 def load_or_generate_index(
     haystack_file_path: Path,
-    index_chunk_size: int = 1000,
+    index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
     force_recreate: bool = False,
 ) -> List[IndexEntry]:
     """Attempts to load an index from a file, or generates one if it doesn't,

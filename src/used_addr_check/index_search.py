@@ -7,6 +7,7 @@ from tqdm import tqdm
 
 from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_types import IndexEntry
+from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 
 
 def _binary_search_index(index: List[IndexEntry], needle: str) -> int:
@@ -93,7 +94,7 @@ def search_in_file_with_index(
 def search_multiple_in_file(
     haystack_file_path: Path | str,
     needles: List[str] | str,
-    index_chunk_size: int = 1000,
+    index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
 ) -> List[str]:
     """
     Searches for multiple needle strings in the file by pre-building an index
