@@ -28,8 +28,7 @@ def _extract_addresses_from_file_python_re(text_file_path: Path) -> List[str]:
     # TODO: could do this in chunks if we wanted, but using ripgrep instead
 
     logger.info("Using Python regex search")
-    with text_file_path.open("r") as file:
-        results = re.findall(BITCOIN_ADDR_REGEX, file.read())
+    results = re.findall(BITCOIN_ADDR_REGEX, text_file_path.read_text(encoding="utf-8"))
 
     return [result[0] for result in results]
 
