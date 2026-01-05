@@ -42,3 +42,7 @@ used_addr_check = "used_addr_check.cli:main_cli"
 
 [tool.pyright]
 typeCheckingMode = "basic"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D", "S", "TD", "FIX", "COM812"]

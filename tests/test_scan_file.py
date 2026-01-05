@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import pytest
 
 from used_addr_check.scan_file import (

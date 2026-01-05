@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import backoff
-from loguru import logger
 import requests
+from loguru import logger
 
 # TODO: This download feature isn't really production-ready.
 # TODO: Make the downloader as fast as wget.
@@ -10,7 +10,7 @@ import requests
 
 
 BITCOIN_LIST_URL = (
-    "http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz"  # noqa
+    "http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz"
 )
 
 
@@ -55,7 +55,7 @@ def _download_file(url: str, dest: Path) -> Path:
     if current_size == total_size:
         logger.info("File already downloaded.")
         return destination
-    elif current_size > total_size:
+    if current_size > total_size:
         logger.warning(
             f"File size mismatch. Current size: {current_size:,} bytes, "
             f"Total size: {total_size:,} bytes"

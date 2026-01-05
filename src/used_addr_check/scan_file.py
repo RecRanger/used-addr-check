@@ -1,12 +1,12 @@
-from pathlib import Path
-from typing import List, Literal
 import re
+from pathlib import Path
+from typing import Literal
 
 from loguru import logger
-from ripgrepy import Ripgrepy, RipGrepNotFound
+from ripgrepy import RipGrepNotFound, Ripgrepy
 
-from used_addr_check.index_search import search_multiple_in_file
 from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
+from used_addr_check.index_search import search_multiple_in_file
 
 # BITCOIN_ADDR_REGEX = r"[13][a-km-zA-HJ-NP-Z1-9]{25,34}"
 
@@ -14,7 +14,7 @@ from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 BITCOIN_ADDR_REGEX = r"\b((bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39})\b"
 
 
-def _extract_addresses_from_file_python_re(text_file_path: Path) -> List[str]:
+def _extract_addresses_from_file_python_re(text_file_path: Path) -> list[str]:
     """
     Extracts bitcoin addresses from a file using Python regex.
 
@@ -33,7 +33,7 @@ def _extract_addresses_from_file_python_re(text_file_path: Path) -> List[str]:
     return [result[0] for result in results]
 
 
-def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> List[str]:
+def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> list[str]:
     """
     Extracts bitcoin addresses from a file using ripgrep.
 
@@ -72,11 +72,11 @@ def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> List[str]:
 
 def extract_addresses_from_file(
     text_file_path: Path,
-    enabled_searchers: List[Literal["ripgrep", "python_re"]] = [
+    enabled_searchers: list[Literal["ripgrep", "python_re"]] = [
         "ripgrep",
         "python_re",
     ],
-) -> List[str]:
+) -> list[str]:
     """
     Extracts bitcoin addresses from a file, using either ripgrep or Python re.
 

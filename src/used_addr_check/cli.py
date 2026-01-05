@@ -1,13 +1,13 @@
 # from used_addr_check.download_list import download_list, BITCOIN_LIST_URL
-from used_addr_check import __VERSION__
-from used_addr_check.index_create import load_or_generate_index
-from used_addr_check.index_search import search_multiple_in_file
-from used_addr_check.scan_file import scan_file_for_used_addresses
-from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
-
 import argparse
 import sys
 from pathlib import Path
+
+from used_addr_check import __VERSION__
+from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
+from used_addr_check.index_create import load_or_generate_index
+from used_addr_check.index_search import search_multiple_in_file
+from used_addr_check.scan_file import scan_file_for_used_addresses
 
 
 def main_cli():
@@ -90,7 +90,7 @@ def main_cli():
     # Subparser for the 'scan_file' command
     scan_file_parser = subparsers.add_parser(
         "scan_file",
-        help="Scan a file for bitcoin addresses, and see which ones have been used.",  # noqa
+        help="Scan a file for bitcoin addresses, and see which ones have been used.",
     )
     scan_file_parser.add_argument(
         "-f",
