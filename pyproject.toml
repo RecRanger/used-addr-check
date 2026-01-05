@@ -26,14 +26,11 @@ dependencies = [
     "ripgrepy~=2.0.0",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
-    "black~=24.4.2",
-    "flake8~=7.0.0",
-]
-
-test = [
-    "pytest~=8.2.0",
+    "pyright>=1.1.407",
+    "pytest>=9.0.2",
+    "ruff>=0.14.10",
 ]
 
 [project.urls]
@@ -42,3 +39,6 @@ Issues = "https://github.com/RecRanger/used-addr-check/issues"
 
 [project.scripts]
 used_addr_check = "used_addr_check.cli:main_cli"
+
+[tool.pyright]
+typeCheckingMode = "basic"

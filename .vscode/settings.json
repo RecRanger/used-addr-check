@@ -16,23 +16,11 @@
 
     // Python formatting
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
         "editor.tabSize": 4,
     },
-    "flake8.args": [
-        "--max-line-length=79"
-    ],
-    "black-formatter.args": [
-        "--line-length=79"
-    ],
-    "editor.rulers": [ 79 ],
-
-    // Enable pylance
-    "python.analysis.typeCheckingMode": "basic",
-
-    // Jupyter Notebooks
-    "jupyter.notebookFileRoot": "${workspaceFolder}",
+    "editor.rulers": [ 88 ],
 
     // Tests
     "python.testing.pytestArgs": ["./tests"],

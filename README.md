@@ -36,7 +36,7 @@ cargo install ripgrep
 ## Usage - CLI
 
 ```bash
-pip install used_addr_check
+uv tool install used_addr_check
 
 # download and extract the required file:
 wget http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz
