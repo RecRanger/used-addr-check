@@ -48,14 +48,14 @@ def _binary_search_index(index: list[IndexEntry], needle: str) -> int:
 def search_in_file_with_index(
     haystack_file_path: Path, needle: str, index: list[IndexEntry]
 ) -> bool:
-    """
-    Searches for a needle string in the file using a pre-built index to narrow
-    down the search area.
+    """Searches for a needle string in the file using a pre-built index.
+
+    The index is used to narrow down the search area.
 
     Args:
-    - haystack_file_path (Path): The path to the file to search.
-    - needle (str): The string to search for in the file.
-    - index (List[Tuple[str, int, int]]): The index as built by `create_index`.
+    - haystack_file_path: The path to the file to search.
+    - needle: The string to search for in the file.
+    - index: The index as built by `create_index`.
 
     Returns: True if the `needle` string is found, False otherwise.
     """
@@ -95,15 +95,16 @@ def search_in_file_with_index(
 def search_multiple_in_file(
     haystack_file_path: Path | str,
     needles: list[str] | str,
+    *,
     index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
 ) -> list[str]:
-    """
-    Searches for multiple needle strings in the file by pre-building an index
-    and then searching within the file.
+    """Searches for multiple needle strings in the file.
+
+    If necessary, it pre-builds an index and then searches within the file.
 
     Args:
     - haystack_file_path (Path): The path to the file to search.
-    - needles (List[str]): The list of strings to search for in the file.
+    - needles: The list of strings to search for in the file.
 
     Returns: A list of the needles that were found in the file.
     """
