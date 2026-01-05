@@ -56,9 +56,7 @@ def generate_index(
     return index
 
 
-def store_index_json(
-    index: List[IndexEntry], index_json_file_path: Path
-) -> None:
+def store_index_json(index: List[IndexEntry], index_json_file_path: Path) -> None:
     """
     Stores the index in a file for later use.
 
@@ -86,9 +84,7 @@ def load_index_json(index_json_file_path: Path) -> List[IndexEntry]:
     return [IndexEntry(**val) for val in raw_read]
 
 
-def store_index_parquet(
-    index: List[IndexEntry], index_parquet_file_path: Path
-) -> None:
+def store_index_parquet(index: List[IndexEntry], index_parquet_file_path: Path) -> None:
     """
     Stores the index in a parquet file for later use.
 
@@ -131,13 +127,10 @@ def load_or_generate_index(
     index_parquet_file_path = haystack_file_path.with_suffix(".index.parquet")
 
     if force_recreate or (
-        not index_json_file_path.exists()
-        and not index_parquet_file_path.exists()
+        not index_json_file_path.exists() and not index_parquet_file_path.exists()
     ):
         logger.info(f"Creating index for file: {haystack_file_path.name}")
-        index = generate_index(
-            haystack_file_path, index_chunk_size=index_chunk_size
-        )
+        index = generate_index(haystack_file_path, index_chunk_size=index_chunk_size)
         logger.info(f"Index created with {len(index):,} entries")
 
         # store to main type (parquet)

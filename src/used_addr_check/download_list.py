@@ -9,7 +9,9 @@ import requests
 # TODO: Create an extract function.
 
 
-BITCOIN_LIST_URL = "http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz"  # noqa
+BITCOIN_LIST_URL = (
+    "http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz"  # noqa
+)
 
 
 def _get_remote_file_size(url: str) -> int:
@@ -63,9 +65,7 @@ def _download_file(url: str, dest: Path) -> Path:
         current_size = 0
     else:
         # File is partially downloaded
-        logger.info(
-            f"Resuming download at offset={current_size:,}/{total_size:,}"
-        )
+        logger.info(f"Resuming download at offset={current_size:,}/{total_size:,}")
 
     # Stream the file from the last byte we have already downloaded
     headers = {"Range": f"bytes={current_size}-"}

@@ -65,10 +65,7 @@ def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> List[str]:
     matches = []
     for result in results:
         matches.extend(
-            [
-                sub_match["match"]["text"]
-                for sub_match in result["data"]["submatches"]
-            ]
+            [sub_match["match"]["text"] for sub_match in result["data"]["submatches"]]
         )
 
     return matches
@@ -95,9 +92,9 @@ def extract_addresses_from_file(
     assert isinstance(text_file_path, Path)
     assert set(enabled_searchers).issubset({"ripgrep", "python_re"})
     assert len(enabled_searchers) > 0
-    assert len(enabled_searchers) == len(
-        set(enabled_searchers)
-    ), f"Duplicate searchers in enabled_searchers: {enabled_searchers}"
+    assert len(enabled_searchers) == len(set(enabled_searchers)), (
+        f"Duplicate searchers in enabled_searchers: {enabled_searchers}"
+    )
 
     for searcher in enabled_searchers:
         if searcher == "ripgrep":
@@ -113,9 +110,7 @@ def extract_addresses_from_file(
         else:
             raise ValueError(f"Invalid searcher provided: {searcher}")
 
-    raise Exception(
-        "This should never be reached. Address extraction has failed."
-    )
+    raise Exception("This should never be reached. Address extraction has failed.")
 
 
 def scan_file_for_used_addresses(

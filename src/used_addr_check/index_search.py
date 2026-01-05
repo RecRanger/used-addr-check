@@ -39,9 +39,7 @@ def _binary_search_index(index: List[IndexEntry], needle: str) -> int:
         return idx
     elif index[idx].line_value < needle:
         # not sure if this can ever happen
-        raise Exception(
-            "bisect.bisect_left failed to find the correct position"
-        )
+        raise Exception("bisect.bisect_left failed to find the correct position")
     else:
         raise Exception("Unexpected condition")
 
@@ -120,8 +118,6 @@ def search_multiple_in_file(
     for needle in tqdm(needles, desc="Searching needles", unit="needle"):
         if search_in_file_with_index(haystack_file_path, needle, index=index):
             found_needles.append(needle)
-    logger.info(
-        f"Found {len(found_needles):,}/{len(needles):,} needles in the file"
-    )
+    logger.info(f"Found {len(found_needles):,}/{len(needles):,} needles in the file")
     logger.info(f"Needles found: {json.dumps(sorted(found_needles))}")
     return found_needles
