@@ -66,7 +66,7 @@ needles = [
 ]
 haystack_file_path = './addr_list.txt'
 
-addresses_found_list: List[str] = search_multiple_in_file(
+addresses_found_list: list[str] = search_multiple_in_file(
     haystack_file_path=haystack_file_path,
     needles=needled,
 )

@@ -1,4 +1,6 @@
+from collections.abc import Callable
 from pathlib import Path
+
 import pytest
 
 from used_addr_check.scan_file import (
@@ -29,7 +31,7 @@ SAMPLE_INPUT_FILE_2_EXPECTED = [
 
 # Combine tests for multiple functions and files
 @pytest.mark.parametrize(
-    "func, input_file, expected",
+    ("func", "input_file", "expected"),
     [
         (
             _extract_addresses_from_file_python_re,
@@ -63,6 +65,8 @@ SAMPLE_INPUT_FILE_2_EXPECTED = [
         ),
     ],
 )
-def test_extract_addresses_from_file(func, input_file, expected):
+def test_extract_addresses_from_file(
+    func: Callable[[Path], list[str]], input_file: Path, expected: list[str]
+) -> None:
     actual = func(input_file)
     assert actual == expected

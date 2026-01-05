@@ -1,18 +1,17 @@
 from pathlib import Path
-from typing import List
 
-from loguru import logger
 import orjson
 import polars as pl
+from loguru import logger
 from tqdm import tqdm
 
-from used_addr_check.index_types import IndexEntry
 from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
+from used_addr_check.index_types import IndexEntry
 
 
 def generate_index(
     haystack_file_path: Path, index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE
-) -> List[IndexEntry]:
+) -> list[IndexEntry]:
     """
     Generates an index for a large sorted text file, storing every
     `index_chunk_size` lines.
@@ -25,7 +24,7 @@ def generate_index(
     - List[IndexEntry]: A list of tuples containing
             line text, byte offset, and line number.
     """
-    index: List[IndexEntry] = []
+    index: list[IndexEntry] = []
     haystack_file_size = haystack_file_path.stat().st_size
     with (
         tqdm(
@@ -35,7 +34,7 @@ def generate_index(
             total=haystack_file_size,
             desc="Indexing haystack file",
         ) as progress_bar,
-        open(haystack_file_path, "rb") as file,
+        haystack_file_path.open("rb") as file,
     ):
         offset = 0
         for line_number, line in enumerate(file):
@@ -56,7 +55,7 @@ def generate_index(
     return index
 
 
-def store_index_json(index: List[IndexEntry], index_json_file_path: Path) -> None:
+def store_index_json(index: list[IndexEntry], index_json_file_path: Path) -> None:
     """
     Stores the index in a file for later use.
 
@@ -65,11 +64,11 @@ def store_index_json(index: List[IndexEntry], index_json_file_path: Path) -> Non
     - index_file_path (Path): The path to store the index.
     """
 
-    with open(index_json_file_path, "wb") as file:
+    with index_json_file_path.open("wb") as file:
         file.write(orjson.dumps(index))
 
 
-def load_index_json(index_json_file_path: Path) -> List[IndexEntry]:
+def load_index_json(index_json_file_path: Path) -> list[IndexEntry]:
     """
     Loads an index from a JSON file.
 
@@ -79,12 +78,12 @@ def load_index_json(index_json_file_path: Path) -> List[IndexEntry]:
     Returns:
     - List[IndexEntry]: The loaded index.
     """
-    with open(index_json_file_path, "rb") as file:
-        raw_read: List[dict] = orjson.loads(file.read())
+    with index_json_file_path.open("rb") as file:
+        raw_read: list[dict] = orjson.loads(file.read())
     return [IndexEntry(**val) for val in raw_read]
 
 
-def store_index_parquet(index: List[IndexEntry], index_parquet_file_path: Path) -> None:
+def store_index_parquet(index: list[IndexEntry], index_parquet_file_path: Path) -> None:
     """
     Stores the index in a parquet file for later use.
 
@@ -97,7 +96,7 @@ def store_index_parquet(index: List[IndexEntry], index_parquet_file_path: Path) 
     df.write_parquet(index_parquet_file_path)
 
 
-def load_index_parquet(index_parquet_file_path: Path) -> List[IndexEntry]:
+def load_index_parquet(index_parquet_file_path: Path) -> list[IndexEntry]:
     """
     Loads an index from a parquet file.
 
@@ -114,8 +113,9 @@ def load_index_parquet(index_parquet_file_path: Path) -> List[IndexEntry]:
 def load_or_generate_index(
     haystack_file_path: Path,
     index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
+    *,
     force_recreate: bool = False,
-) -> List[IndexEntry]:
+) -> list[IndexEntry]:
     """Attempts to load an index from a file, or generates one if it doesn't,
     or if `force_recreate` is enabled.
 
@@ -153,4 +153,5 @@ def load_or_generate_index(
         logger.info(f"Index loaded with {len(index):,} entries")
         return index
 
-    raise Exception("This should be unreachable.")
+    msg = "This should be unreachable."
+    raise RuntimeError(msg)
