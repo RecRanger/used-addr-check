@@ -34,7 +34,7 @@ def generate_index(
             total=haystack_file_size,
             desc="Indexing haystack file",
         ) as progress_bar,
-        open(haystack_file_path, "rb") as file,
+        haystack_file_path.open("rb") as file,
     ):
         offset = 0
         for line_number, line in enumerate(file):
@@ -64,7 +64,7 @@ def store_index_json(index: list[IndexEntry], index_json_file_path: Path) -> Non
     - index_file_path (Path): The path to store the index.
     """
 
-    with open(index_json_file_path, "wb") as file:
+    with index_json_file_path.open("wb") as file:
         file.write(orjson.dumps(index))
 
 
@@ -78,7 +78,7 @@ def load_index_json(index_json_file_path: Path) -> list[IndexEntry]:
     Returns:
     - List[IndexEntry]: The loaded index.
     """
-    with open(index_json_file_path, "rb") as file:
+    with index_json_file_path.open("rb") as file:
         raw_read: list[dict] = orjson.loads(file.read())
     return [IndexEntry(**val) for val in raw_read]
 
@@ -113,6 +113,7 @@ def load_index_parquet(index_parquet_file_path: Path) -> list[IndexEntry]:
 def load_or_generate_index(
     haystack_file_path: Path,
     index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
+    *,
     force_recreate: bool = False,
 ) -> list[IndexEntry]:
     """Attempts to load an index from a file, or generates one if it doesn't,
@@ -152,4 +153,5 @@ def load_or_generate_index(
         logger.info(f"Index loaded with {len(index):,} entries")
         return index
 
-    raise Exception("This should be unreachable.")
+    msg = "This should be unreachable."
+    raise RuntimeError(msg)

@@ -1,4 +1,5 @@
 import re
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Literal
 
@@ -7,8 +8,6 @@ from ripgrepy import RipGrepNotFound, Ripgrepy
 
 from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 from used_addr_check.index_search import search_multiple_in_file
-
-# BITCOIN_ADDR_REGEX = r"[13][a-km-zA-HJ-NP-Z1-9]{25,34}"
 
 # Source: https://ihateregex.io/expr/bitcoin-address/
 BITCOIN_ADDR_REGEX = r"\b((bc1|[13])[a-zA-HJ-NP-Z0-9]{25,39})\b"
@@ -72,10 +71,10 @@ def _extract_addresses_from_file_ripgrep(text_file_path: Path) -> list[str]:
 
 def extract_addresses_from_file(
     text_file_path: Path,
-    enabled_searchers: list[Literal["ripgrep", "python_re"]] = [
+    enabled_searchers: Sequence[Literal["ripgrep", "python_re"]] = (
         "ripgrep",
         "python_re",
-    ],
+    ),
 ) -> list[str]:
     """
     Extracts bitcoin addresses from a file, using either ripgrep or Python re.
@@ -107,16 +106,18 @@ def extract_addresses_from_file(
             return _extract_addresses_from_file_python_re(text_file_path)
 
         else:
-            raise ValueError(f"Invalid searcher provided: {searcher}")
+            msg = f"Invalid searcher provided: {searcher}"
+            raise ValueError(msg)
 
-    raise Exception("This should never be reached. Address extraction has failed.")
+    msg = "This should never be reached. Address extraction has failed."
+    raise RuntimeError(msg)
 
 
 def scan_file_for_used_addresses(
     haystack_file_path: Path,
     needle_file_path: Path,
     index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
-):
+) -> None:
     """
     Scans a file for bitcoin addresses, and see which one have been used.
 
