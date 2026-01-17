@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "used_addr_check"
-version = "0.1.6"
+version = "0.1.7"
 authors = [
     { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
@@ -17,13 +17,13 @@ classifiers = [
 ]
 
 dependencies = [
-    "backoff~=2.2.1",
-    "loguru~=0.7.2",
-    "orjson~=3.10.1",
-    "polars~=0.20.23",
-    "requests~=2.31.0",
-    "tqdm~=4.66.2",
-    "ripgrepy~=2.0.0",
+    "backoff>=2.2.1",
+    "loguru>=0.7.2",
+    "orjson>=3.10.1",
+    "polars>=1.37",
+    "requests>=2.31.0",
+    "tqdm>=4.66.2",
+    "ripgrepy>=2.0.0",
 ]
 
 [dependency-groups]
