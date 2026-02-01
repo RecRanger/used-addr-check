@@ -51,6 +51,7 @@ def test_search_multiple_in_file_generated(
     ]
 
     expected_found: list[str] = random.sample(haystack_list, k=target_needle_count)
+    expected_found.sort()
     needles_to_search.extend(expected_found)
 
     # Sort then write the haystack to disk.

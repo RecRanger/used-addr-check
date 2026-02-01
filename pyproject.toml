@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "used_addr_check"
-version = "0.1.9"
+version = "0.2.0"
 authors = [
     { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
