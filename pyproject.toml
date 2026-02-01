@@ -4,7 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "used_addr_check"
-version = "0.2.0"
+# Update in used_addr_check/__init__.py as well.
+version = "0.2.1.dev0"
 authors = [
     { name="RecRanger", email="RecRanger+package@proton.me" },
 ]
@@ -19,10 +20,8 @@ classifiers = [
 dependencies = [
     "backoff>=2.2.1",
     "loguru>=0.7.2",
-    "orjson>=3.10.1",
     "polars>=1.37",
     "requests>=2.31.0",
-    "tqdm>=4.66.2",
     "ripgrepy>=2.0.0",
 ]
 
