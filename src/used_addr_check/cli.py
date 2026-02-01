@@ -49,8 +49,7 @@ def main_cli() -> None:
     index_parser = subparsers.add_parser(
         "index",
         help=(
-            "Index a haystack 'used addresses' file, "
-            "and save it to orig_name.txt.index.json"
+            "Index a haystack 'used addresses' file, and save it to orig_name.parquet"
         ),
     )
     index_parser.add_argument(
@@ -58,7 +57,7 @@ def main_cli() -> None:
         "--haystack",
         dest="haystack_file_path",
         required=True,
-        help="Haystack address list file path (.txt)",
+        help="Haystack address list file path (.txt or .parquet)",
     )
 
     # Subparser for the 'search' command
@@ -68,7 +67,7 @@ def main_cli() -> None:
         "--haystack",
         dest="haystack_file_path",
         required=True,
-        help="Haystack address list file path (.txt)",
+        help="Haystack address list file path (.txt or .parquet)",
     )
     search_parser.add_argument(
         "-n",
@@ -89,15 +88,17 @@ def main_cli() -> None:
         "--haystack",
         dest="haystack_file_path",
         required=True,
-        help="Haystack address list file path (.txt)",
+        help="Haystack address list file path (.txt or .parquet)",
     )
     scan_file_parser.add_argument(
         "-n",
         "--needle",
         dest="needle_haystack_file_path",
         required=True,
-        help="Needle file path, with list of addresses. Addresses will be "
-        "extracted from this file",
+        help=(
+            "Needle file path, with list of addresses. Addresses will be "
+            "extracted from this file using a standard address regex."
+        ),
     )
 
     args = parser.parse_args()
