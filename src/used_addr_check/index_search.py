@@ -1,128 +1,67 @@
-import bisect
 import json
 from pathlib import Path
 
+import polars as pl
 from loguru import logger
-from tqdm import tqdm
 
-from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 from used_addr_check.index_create import load_or_generate_index
-from used_addr_check.index_types import IndexEntry
-
-
-def _binary_search_index(index: list[IndexEntry], needle: str) -> int:
-    """
-    Performs a binary search on the index to find the closest position for the
-    needle string.
-
-    Args:
-    - index (List[IndexEntry]): The index list, as returned by `create_index()`
-    - needle (str): The string to find in the index.
-
-    Returns:
-    - int: The index position (index into `index` list), to the left of where
-        the needle could/would be located.
-    """
-    index_values = [entry.line_value for entry in index]
-    idx = bisect.bisect_left(index_values, needle)
-
-    # not sure what this condition is about
-    if idx == len(index):
-        return idx - 1
-
-    if index[idx].line_value > needle:
-        # common occurrence
-        return idx - 1
-    if index[idx].line_value == needle:
-        # rare occurrence - exact match on one of the index keys (e.g., 0)
-        return idx
-    if index[idx].line_value < needle:
-        # not sure if this can ever happen
-        msg = "bisect.bisect_left failed to find the correct position"
-        raise RuntimeError(msg)
-
-    msg = "Unexpected condition"
-    raise RuntimeError(msg)
-
-
-def search_in_file_with_index(
-    haystack_file_path: Path, needle: str, index: list[IndexEntry]
-) -> bool:
-    """Searches for a needle string in the file using a pre-built index.
-
-    The index is used to narrow down the search area.
-
-    Args:
-    - haystack_file_path: The path to the file to search.
-    - needle: The string to search for in the file.
-    - index: The index as built by `create_index`.
-
-    Returns: True if the `needle` string is found, False otherwise.
-    """
-    assert isinstance(haystack_file_path, Path)
-    assert isinstance(needle, str)
-    assert isinstance(index, list)
-
-    position = _binary_search_index(index, needle)
-
-    if 0:
-        logger.debug(f"Search {needle}: Binary search position: {position}")
-        logger.debug(f"Search {needle}: {index[position]}")
-
-    if position == len(index):
-        # Binary search position equals index length, returning False.
-        return False
-
-    # Find the bounds to search within the file
-    start_offset = index[position].byte_offset
-    end_offset = None
-    if position + 1 < len(index):
-        end_offset = index[position + 1].byte_offset
-
-    with haystack_file_path.open(encoding="ascii") as file:
-        file.seek(start_offset)
-        while True:
-            if end_offset and file.tell() >= end_offset:
-                break
-            line = file.readline()
-            if not line:
-                break
-            if line.strip() == needle:
-                return True
-    return False
 
 
 def search_multiple_in_file(
-    haystack_file_path: Path | str,
-    needles: list[str] | str,
-    *,
-    index_chunk_size: int = DEFAULT_INDEX_CHUNK_SIZE,
+    haystack_file_path: Path | str, needles: list[str] | str
 ) -> list[str]:
     """Searches for multiple needle strings in the file.
 
-    If necessary, it pre-builds an index and then searches within the file.
+    Builds the index if not yet built.
+
+    Returns the list of needles that were found in the file, sorted.
 
     Args:
-    - haystack_file_path (Path): The path to the file to search.
-    - needles: The list of strings to search for in the file.
+        haystack_file_path (Path): The path to the file to search. Can be either
+            .txt or .parquet.
+        needles: The list of strings to search for in the file.
 
     Returns: A list of the needles that were found in the file.
     """
     if isinstance(needles, str):
         needles = [needles]
 
-    haystack_file_path = Path(haystack_file_path)  # normalize to Path
+    haystack_file_path = Path(haystack_file_path)
     assert haystack_file_path.exists(), f"File not found: {haystack_file_path}"
 
-    index = load_or_generate_index(haystack_file_path, index_chunk_size)
+    index_lazyframe = load_or_generate_index(haystack_file_path)
 
-    # Do the search.
-    found_needles = [
-        needle
-        for needle in tqdm(needles, desc="Searching needles", unit="needle")
-        if search_in_file_with_index(haystack_file_path, needle, index=index)
-    ]
+    # The parquet file is already sorted, and parquets include statistics (works very
+    # similar to a B-Tree in practice), so is_in() is very efficient here.
+    found_needles: list[str] = (
+        index_lazyframe.select("row")
+        .filter(pl.col("row").is_in(needles))
+        .sort("row")
+        .collect()
+        .to_series()
+        .to_list()
+    )
+
+    found_needles.sort()  # Ensure sorted.
 
     logger.info(f"Found {len(found_needles):,}/{len(needles):,} needles in the file")
     logger.info(f"Needles found: {json.dumps(sorted(found_needles))}")
     return found_needles
+
+
+def search_in_file_with_index(haystack_file_path: Path, needle: str) -> bool:
+    """Searches for a needle string in the file using a pre-built index.
+
+    Builds the index if not yet built.
+
+    Args:
+        haystack_file_path: The path to the file to search.
+        needle: The string to search for in the file.
+
+    Returns: True if the `needle` string is found, False otherwise.
+    """
+    assert isinstance(haystack_file_path, Path)
+    assert isinstance(needle, str)
+
+    search_result = search_multiple_in_file(haystack_file_path, [needle])
+    return len(search_result) > 0

@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 from used_addr_check import __VERSION__
-from used_addr_check.defaults import DEFAULT_INDEX_CHUNK_SIZE
 from used_addr_check.download_list import BITCOIN_LIST_URL, download_list
 from used_addr_check.index_create import load_or_generate_index
 from used_addr_check.index_search import search_multiple_in_file
@@ -20,14 +19,6 @@ def main_cli() -> None:
         dest="version",
         action="store_true",
         help="Print version to stdout and exit",
-    )
-    parser.add_argument(
-        "-i",
-        "--index-chunk-size",
-        dest="index_chunk_size",
-        type=int,
-        default=DEFAULT_INDEX_CHUNK_SIZE,
-        help="Size of chunks to store in the parquet index file",
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -118,13 +109,11 @@ def main_cli() -> None:
         load_or_generate_index(
             haystack_file_path=Path(args.haystack_file_path),
             force_recreate=True,
-            index_chunk_size=args.index_chunk_size,
         )
     elif args.command == "search":
         search_multiple_in_file(
             Path(args.haystack_file_path),
             args.needles,
-            index_chunk_size=args.index_chunk_size,
         )
     elif args.command == "download":
         download_list(Path(args.output_path))
@@ -132,7 +121,6 @@ def main_cli() -> None:
         scan_file_for_used_addresses(
             Path(args.haystack_file_path),
             Path(args.needle_haystack_file_path),
-            index_chunk_size=args.index_chunk_size,
         )
     else:
         parser.print_help()
