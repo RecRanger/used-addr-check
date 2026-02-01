@@ -24,11 +24,11 @@ gunzip -d ./all_Bitcoin_addresses_ever_used_sorted.txt.gz --stdout | pv > all_Bi
 ```
 
 Optionally, if you intend to use the `scan_file` subcommand, install `ripgrep`
-from optimal performance:
+for optimal performance:
 
 ```bash
-# first, install cargo/rust
-# then, run:
+# First, install cargo/rust.
+# Then, run:
 cargo install ripgrep
 ```
 
@@ -38,18 +38,18 @@ cargo install ripgrep
 ```bash
 uv tool install used_addr_check
 
-# download and extract the required file:
+# Download and extract the required file:
 wget http://alladdresses.loyce.club/all_Bitcoin_addresses_ever_used_sorted.txt.gz
 gunzip -d ./all_Bitcoin_addresses_ever_used_sorted.txt.gz --stdout | pv > addr_list.txt
 
-# generate the index file (optional):
+# Generate the index file (optional):
 used_addr_check index -f ./addr_list.txt
 # the index file is now at: ./addr_list.index.parquet
 
-# search a couple of addresses:
+# Search a couple of addresses:
 used_addr_check search -f ./addr_list.txt -s moW9o415jNfgyuzytEMZD84Kovri5DJ64e -s mncqTEYTidNdbqGZnXTd1JFYRrruuh5StV
 
-# search for a long list of addresses (extracted by regex):
+# Search for a long list of addresses (extracted by regex):
 used_addr_check scan_file -f ./addr_list.txt -n file_with_addresses_to_lookup.txt
 ```
 
